@@ -5,7 +5,7 @@
 /* html body */
 @layer base {
   body {
-    @apply bg-[#141414] text-white;
+    @apply bg-[#141414] text-white !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-cyan-600;
   }
   header {
     @apply flex items-center justify-between fixed z-50 top-0 w-full px-4 py-4 transition-all lg:px-10 border-spacing-1;
