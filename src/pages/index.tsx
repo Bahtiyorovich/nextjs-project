@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   
   const trending = await fetch(API_REQUEST.trending).then(res => res.json());
   const topRated = await fetch(API_REQUEST.top_rated).then(res => res.json());
-
+  
   return {
     props: {
       trending: trending.results,
