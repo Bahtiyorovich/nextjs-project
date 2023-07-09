@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { Header, Hero, Row, Modal, SubscriptionPlan } from 'src/components'
-import { IMovie } from 'src/interface/app.interface'
+import { IMovie, Products } from 'src/interface/app.interface'
 import { API_REQUEST } from 'src/services/api.service'
 import { useContext } from 'react';
 import { AuthContext } from 'src/context/auth.context'
@@ -15,14 +15,16 @@ export default function Home({
   documentary, 
   history, 
   family, 
-  comedy}: HomeProps): JSX.Element {
-  
+  comedy,
+  products_list,
+
+}: HomeProps): JSX.Element {
   const {modal} = useInfoStore()
   const { isLoading } = useContext(AuthContext)
   const subscription = false
 
-    if (isLoading) return <>{null}</>;
-    if(!subscription) return <SubscriptionPlan/>
+  if (isLoading) return <>{null}</>;
+  if(!subscription) return <SubscriptionPlan products_list={products_list}/>
 
 
   return (
@@ -57,7 +59,7 @@ export default function Home({
 
 // SSR - server side rendering code
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const [trending, topRated, tvTopRated, popular, documentary, comedy, family, history] = await Promise.all([
+  const [trending, topRated, tvTopRated, popular, documentary, comedy, family, history, products_list] = await Promise.all([
     fetch(API_REQUEST.trending).then(res => res.json()),
     fetch(API_REQUEST.top_rated).then(res => res.json()),
     fetch(API_REQUEST.tv_top_rated).then(res => res.json()),
@@ -66,6 +68,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     fetch(API_REQUEST.comedy).then(res => res.json()),
     fetch(API_REQUEST.family).then(res => res.json()),
     fetch(API_REQUEST.history).then(res => res.json()),
+    fetch(API_REQUEST.products_list).then(res => res.json())
   ])
 
   return {
@@ -78,6 +81,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
       comedy: comedy.results,
       family: family.results,
       history: history.results,
+      products_list: products_list.products.data,
     }
   }
 }
@@ -90,6 +94,7 @@ interface HomeProps {
   comedy: IMovie[],
   family: IMovie[],
   history: IMovie[],
+  products_list: Products[],
 }
 
 

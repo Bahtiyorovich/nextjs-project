@@ -22,4 +22,16 @@ export interface IMovie {
     type: 'Trailer' | 'Clip' | 'Opening Credits' | 'Behind the Scenes'
   }
 
+  export interface Products {
+    default_price: {
+      id: string,
+      unit_amount: number,
+    },
+    id:string,
+    images:string[],
+    metadata:{
+      adv:string
+    },
+    name: string,
+  }
   
