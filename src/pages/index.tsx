@@ -17,14 +17,14 @@ export default function Home({
   family, 
   comedy,
   products_list,
+  subscription,
 
 }: HomeProps): JSX.Element {
   const {modal} = useInfoStore()
   const { isLoading } = useContext(AuthContext)
-  const subscription = false
-
   if (isLoading) return <>{null}</>;
-  if(!subscription) return <SubscriptionPlan products_list={products_list}/>
+
+  if(!subscription.length) return <SubscriptionPlan products_list={products_list}/>
 
 
   return (
@@ -58,8 +58,11 @@ export default function Home({
 
 
 // SSR - server side rendering code
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const [trending, topRated, tvTopRated, popular, documentary, comedy, family, history, products_list] = await Promise.all([
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({req}) => {
+
+  const user_id = req.cookies.user_id;
+
+  const [trending, topRated, tvTopRated, popular, documentary, comedy, family, history, products_list, subscription] = await Promise.all([
     fetch(API_REQUEST.trending).then(res => res.json()),
     fetch(API_REQUEST.top_rated).then(res => res.json()),
     fetch(API_REQUEST.tv_top_rated).then(res => res.json()),
@@ -68,7 +71,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     fetch(API_REQUEST.comedy).then(res => res.json()),
     fetch(API_REQUEST.family).then(res => res.json()),
     fetch(API_REQUEST.history).then(res => res.json()),
-    fetch(API_REQUEST.products_list).then(res => res.json())
+    fetch(API_REQUEST.products_list).then(res => res.json()),
+    fetch(`${API_REQUEST.subscription}/${user_id}`).then(res => res.json())
   ])
 
   return {
@@ -82,6 +86,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
       family: family.results,
       history: history.results,
       products_list: products_list.products.data,
+      subscription: subscription.subscription.data
     }
   }
 }
@@ -95,6 +100,7 @@ interface HomeProps {
   family: IMovie[],
   history: IMovie[],
   products_list: Products[],
+  subscription: string[]
 }
 
 

@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 
 const Auth = () => {
   const [auth, setAuth] = useState<"signup" | "signin">("signin");
-  const { error, isLoading, user, signUp, signIn } = useContext(AuthContext);
+  const { error, isLoading, user, signUp, signIn, } = useContext(AuthContext);
 
   const router = useRouter()
 
@@ -20,7 +20,7 @@ const Auth = () => {
     setAuth(state);
   };
 
-  const onSubmit = (formData: { email: string; password: string }) => {
+  const onSubmit = async (formData: { email: string; password: string }) => {
     if(auth === 'signup'){
       signUp(formData.email, formData.password)
     } else {
@@ -87,7 +87,7 @@ const Auth = () => {
 
           <button
             disabled={isLoading}
-            className="w-full bg-[#E10856] py-3 font-semibold my-4 rounded"
+            className="w-full py-4 font-semibold my-4 rounded bg-emerald-500 transform hover:bg-emerald-400 transition duration-500 "
             type="submit"
           >
             {isLoading ? 'Loading...' : auth === "signin" ? "Sign In" : "Sign Up"}
