@@ -35,3 +35,24 @@ export interface IMovie {
     name: string,
   }
   
+  export interface Subscription {
+    current_period_start: number,
+    id: string,
+    current_period_end: number,
+    plan: {
+      nickname: string,
+      amount: boolean,
+      active: boolean
+    },
+    default_payment_method: {
+      card: {
+        brand: string,
+        exp_month: number,
+        exp_year: number,
+        last4: number
+      }
+    },
+    customer: {
+      email: string,
+    }
+  }

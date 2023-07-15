@@ -1,5 +1,4 @@
 import { User, onAuthStateChanged } from "firebase/auth";
-import { useRouter } from "next/router";
 import {createContext, ReactNode, useMemo, useEffect, useState } from "react"
 import { auth } from "src/firebase";
 import { useAuth } from "src/hooks/useAuth";
@@ -29,8 +28,6 @@ const AuthContextProvider = ({children} : {children: ReactNode}) => {
 
     const {isLoading, error, user, signUp, signIn, logOut, setUser, setIsLoading} = useAuth()
 
-    const router = useRouter()
-
     const value = useMemo(
         () => ({
             user, isLoading, error, signUp, signIn, logOut
@@ -41,12 +38,9 @@ const AuthContextProvider = ({children} : {children: ReactNode}) => {
 
     useEffect(() => onAuthStateChanged(auth, user => {
         if(user){
-            setIsLoading(false)
             setUser(user)
         } else {
             setUser(null)
-            setIsLoading(true)
-            router.push('/auth')
         }
         setIsLoading(false)
         setIntialLoader(false)

@@ -29,4 +29,8 @@
     @apply !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-transparent;
   }
 
+  .membershipLink {
+    @apply cursor-pointer text-blue-500 hover:underline;
+  }
+
 }
