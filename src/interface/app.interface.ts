@@ -53,6 +53,14 @@ export interface IMovie {
       }
     },
     customer: {
-      email: string,
+      email: string;
+      metadata: {
+        user_id: string
+      }
     }
   }
+
+export interface MyMovies {
+  userId: string,
+  product: IMovie,
+}

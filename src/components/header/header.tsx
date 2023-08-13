@@ -4,6 +4,8 @@ import {BiBellMinus} from 'react-icons/bi'
 import {AiOutlineSetting, AiOutlineSearch, AiOutlineUser, AiOutlineLogout} from 'react-icons/ai'
 import Link from "next/link";
 import { AuthContext } from 'src/context/auth.context';
+import NavMenu from "../nav-menu/navMenu";
+import { Tooltip } from "@mui/material";
 
 const Header = () => {
 
@@ -37,8 +39,12 @@ const Header = () => {
           height={56}
           className={"cursor-pointer object-contain"}
         />
+
+      <NavMenu/>
+
         <ul className="space-x-10 md:flex hidden">
           <li>
+          <Tooltip title="Home">
             <Image
               src={"/home.svg"}
               alt={"logo"}
@@ -46,46 +52,71 @@ const Header = () => {
               height={20}
               className='navlink'
             />
+          </Tooltip>
           </li>
           <li>
-            <Image
-              src={"/movie.svg"}
-              alt={"logo"}
-              width={20}
-              height={20}
-              className='navlink'
-            />
+            <Tooltip title="Movies">
+              <Image
+                src={"/movie.svg"}
+                alt={"logo"}
+                width={20}
+                height={20}
+                className='navlink'
+              />
+            </Tooltip>
           </li>
           <li>
-            <Image
-              src={"/tv.svg"}
-              alt={"logo"}
-              width={20}
-              height={20}
-              className='navlink'
-            />
+            <Tooltip title="TV Show">
+              <Image
+                src={"/tv.svg"}
+                alt={"logo"}
+                width={20}
+                height={20}
+                className='navlink'
+              />
+            </Tooltip>
           </li>
           <li>
-            <Image
-              src={"/stroke.svg"}
-              alt={"logo"}
-              width={20}
-              height={20}
-              className='navlink'
-            />
+            <Tooltip title="News">
+              <Image
+                src={"/stroke.svg"}
+                alt={"logo"}
+                width={20}
+                height={20}
+                className='navlink'
+              />
+            </Tooltip>
           </li>
         </ul>
       </div>
 
       <div className='flex space-x-6 lg:space-x-10 cursor-pointer'>
-        <AiOutlineSearch className='w-6 h-6 cursor-pointer'/>
+        <Tooltip title="search" placement="top">
+          <div>
+            <AiOutlineSearch className='w-6 h-6 cursor-pointer'/> 
+          </div>
+        </Tooltip>
         <p className='hidden lg:inline'>Kids</p>
-        <Link href={'/account'}>
-            <AiOutlineUser className='w-6 h-6 cursor-pointer'/>
-        </Link>
-        <BiBellMinus className='w-6 h-6 cursor-pointer'/>
-        <AiOutlineSetting className='w-6 h-6 cursor-pointer'/>
-        <AiOutlineLogout  className='w-6 h-6 cursor-pointer' onClick={logOut}/>
+        <Tooltip title="user account">
+          <Link href={'/account'}>
+              <AiOutlineUser className='w-6 h-6 cursor-pointer'/>
+          </Link>
+        </Tooltip>
+        <Tooltip title="message">
+          <div>
+            <BiBellMinus className='w-6 h-6 cursor-pointer'/>
+          </div>
+        </Tooltip>
+        <Tooltip title="settings">
+          <div>
+            <AiOutlineSetting className='w-6 h-6 cursor-pointer'/>
+          </div>
+        </Tooltip>
+        <Tooltip title="Logout">
+          <div>
+            <AiOutlineLogout  className='w-6 h-6 cursor-pointer' onClick={logOut}/>
+          </div>
+        </Tooltip>
       </div>
     </header>
   );

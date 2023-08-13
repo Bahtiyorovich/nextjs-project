@@ -9,8 +9,11 @@ import { MembershipPlan } from 'src/components'
 import { Subscription } from 'src/interface/app.interface'
 import { API_REQUEST } from 'src/services/api.service'
 import moment from 'moment'
+import { useAuth } from 'src/hooks/useAuth'
 
 const Account = ({subscription}:AccountProps) => {
+
+  const {logOut} = useAuth()
 
   console.log(subscription)
 
@@ -60,7 +63,7 @@ const Account = ({subscription}:AccountProps) => {
           </div>
           <div className="mt-6 grid  grid-cols-1 gap-x-4 border px-4 py-4 md:grid-cols-4 md:bordder-x-0 md:border-t md:border-b-0 md:pb-0">
                <h4 className="text-lg text-[gray]">Settings</h4>
-               <p className="col-span-3 cursor-pointer text-blue-500 hover:underline ">Sign out of all devices</p>
+               <p className="col-span-3 cursor-pointer text-blue-500 hover:underline " onClick={logOut}>Sign out of all devices</p>
           </div>
 
         </main>
@@ -81,6 +84,15 @@ export const getServerSideProps: GetServerSideProps<AccountProps> = async ({req}
   }
 
   const subscription = await fetch(`${API_REQUEST.subscription}/${user_id}`).then(res => res.json())
+
+  if(!subscription.subscription.data.length){
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
 
   return {
     props: {

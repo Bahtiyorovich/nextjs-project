@@ -25,8 +25,8 @@ const Row = ({title, movies, isBig = false}: RowProps) => {
   }
 
   return ( 
-    <div className="h-[600px] space-y-1 md:space-y-2">
-      <h2 className='hover:text-shadow w-56 cursor-pointer text-sm md:text-2xl transition duration-200 font-semibold'>{title}</h2>
+    <div className="md:h-[600px] space-y-3 md:space-y-2">
+      <h2 className='hover:text-shadow w-56 cursor-pointer text-lg mt-3 md:text-2xl transition duration-200 font-semibold'>{title}</h2>
       {/* carousel */}
       <div className='group mg:m6-2 relative'>
         <AiFillCaretLeft 

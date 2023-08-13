@@ -1,9 +1,12 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { Header, Hero, Row, Modal, SubscriptionPlan } from 'src/components'
-import { IMovie, Products } from 'src/interface/app.interface'
+import { IMovie, MyMovies, Products } from 'src/interface/app.interface'
 import { API_REQUEST } from 'src/services/api.service'
 import { useInfoStore } from 'src/store'
+import { useEffect, useContext } from 'react';
+import { getMyMovies } from 'src/helpers/my-movies'
+import { AuthContext } from 'src/context/auth.context'
 
 export default function Home({
   trending, 
@@ -16,10 +19,10 @@ export default function Home({
   comedy,
   products_list,
   subscription,
-
+  movies,
 }: HomeProps): JSX.Element {
   const {modal} = useInfoStore()
-
+ 
   if(!subscription.length) return <SubscriptionPlan products_list={products_list}/>
 
 
@@ -41,10 +44,11 @@ export default function Home({
           {/* Big Row */}
           <Row title="Featured TV Show" movies={tvTopRated} isBig={true}/>
           <Row title="Popular" movies={popular} isBig={true}/>
-          <Row title="Documentary" movies={documentary.reverse()}/>
+          <Row title="My Movies" movies={movies} isBig={false}/>
+          {/* <Row title="Documentary" movies={documentary.reverse()}/>
           <Row title="History" movies={history} isBig={true}/>
           <Row title="Family" movies={family.reverse()}/>
-          <Row title="Comedy" movies={comedy} isBig={true}/>
+          <Row title="Comedy" movies={comedy} isBig={true}/> */}
         </section>
       </main>
       {modal && <Modal/>}
@@ -77,6 +81,9 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({req}) =
     fetch(`${API_REQUEST.subscription}/${user_id}`).then(res => res.json())
   ])
 
+  const myMovies: MyMovies[] = await getMyMovies(user_id)
+
+
   return {
     props: {
       trending: trending.results,
@@ -88,7 +95,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({req}) =
       family: family.results,
       history: history.results,
       products_list: products_list.products.data,
-      subscription: subscription.subscription.data
+      subscription: subscription.subscription.data,
+      movies: myMovies.map(c => c.product)
     }
   }
 }
@@ -102,7 +110,8 @@ interface HomeProps {
   family: IMovie[],
   history: IMovie[],
   products_list: Products[],
-  subscription: string[]
+  subscription: string[],
+  movies: IMovie[],
 }
 
 

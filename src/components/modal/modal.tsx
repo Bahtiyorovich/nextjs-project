@@ -9,6 +9,12 @@ import { BsVolumeUp, BsVolumeMute } from 'react-icons/bs'
 import {CiPause1} from 'react-icons/ci'
 import { BsPlayCircle } from 'react-icons/bs'
 import {AiOutlineLike} from 'react-icons/ai'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from 'src/firebase'
+import { AuthContext } from 'src/context/auth.context'
+import { useContext } from 'react';
+import { useRouter } from 'next/router'
+import { Snackbar } from '@mui/material'
 
 
 const Modal = () => {
@@ -16,6 +22,10 @@ const Modal = () => {
     const [trailer, setTrailer] = useState<string>('')
     const [muted, setMuted] = useState<boolean>(true)
     const [play, setPlay] = useState<boolean>(true)
+    const router = useRouter()
+    const { user } = useContext(AuthContext)
+
+    const [open, setOpen] = useState(false)
 
     const base_url = process.env.NEXT_PUBLIC_API_DOMAIN as string;
     const api_key = process.env.NEXT_PUBLIC_API_KEY as string;
@@ -41,12 +51,38 @@ const Modal = () => {
         setModal(false)
     }
 
+    const handleOpen = () => {
+        setOpen(false)
+    }
+
+    const addProductList = async () => {
+        try {
+            const docRef = await addDoc(collection(db, "myMovies"), {
+              userId: user?.uid,
+              product: currentMovie,
+            });
+            setOpen(true)
+            router.replace(router.asPath)
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+    }
+
   return <MiuModal open={modal} onClose={handleClose} className="playerScroll fixed !top-7 left-0 right-0 z-50 px-10 mx-auto w-full max-w-6xl bg-transparent rounded overflow-hidden overflow-y-auto">
         <>
             <button onClick={handleClose} className='modalBtn absolute right-1 top-0 !z-40' type='button'>
                 <FaTimes/>
             </button>
 
+            {/* snackbar */}
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                autoHideDuration={4000}
+                onClose={handleOpen}
+                message="Succesfully added movie"
+                key={currentMovie.id}
+            />
             <div className='relative pt-[55%]'>
                 <ReactPlayer 
                     url={`https://www.youtube.com/watch?v=${trailer}`} 
@@ -68,7 +104,7 @@ const Modal = () => {
                         <button className='modalBtn'>
                             <AiOutlineLike className='h-6 w-6'/>
                         </button>
-                        <button className='modalBtn'>
+                        <button className='modalBtn' onClick={addProductList}>
                             <BiPlus className='h-6 w-6'/>
                         </button>
                     </div>
